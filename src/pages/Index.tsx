@@ -187,15 +187,26 @@ export default function Index() {
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
             >
-              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/20 to-accent/20">
-                <div className="text-center space-y-4 p-8">
-                  <div className="text-8xl">{currentVideo.avatar}</div>
-                  <div className="space-y-2">
-                    <h2 className="text-2xl font-bold text-gradient">{currentVideo.username}</h2>
-                    <p className="text-muted-foreground">{currentVideo.description}</p>
+              {currentVideo.videoUrl.startsWith('blob:') ? (
+                <video 
+                  src={currentVideo.videoUrl}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/20 to-accent/20">
+                  <div className="text-center space-y-4 p-8">
+                    <div className="text-8xl">{currentVideo.avatar}</div>
+                    <div className="space-y-2">
+                      <h2 className="text-2xl font-bold text-gradient">{currentVideo.username}</h2>
+                      <p className="text-muted-foreground">{currentVideo.description}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               <div className="absolute bottom-24 left-6 right-20 z-10 space-y-3 animate-slide-up">
                 <div className="flex items-center gap-3">
