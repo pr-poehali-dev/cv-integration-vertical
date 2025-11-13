@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Icon from '@/components/ui/icon';
 
 interface Video {
@@ -53,6 +53,8 @@ export default function Index() {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [videos, setVideos] = useState(mockVideos);
   const [activeTab, setActiveTab] = useState<'home' | 'search' | 'upload' | 'trends' | 'profile'>('home');
+  const touchStartY = useRef(0);
+  const touchEndY = useRef(0);
 
   const currentVideo = videos[currentVideoIndex];
 
@@ -82,6 +84,27 @@ export default function Index() {
     return num.toString();
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = () => {
+    const swipeDistance = touchStartY.current - touchEndY.current;
+    const minSwipeDistance = 50;
+
+    if (Math.abs(swipeDistance) > minSwipeDistance) {
+      if (swipeDistance > 0) {
+        handleNextVideo();
+      } else {
+        handlePrevVideo();
+      }
+    }
+  };
+
   return (
     <div className="h-screen w-full bg-background overflow-hidden relative">
       <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4 flex items-center justify-between">
@@ -104,7 +127,12 @@ export default function Index() {
               style={{ transform: 'scale(0.9)' }}
             />
             
-            <div className="relative h-full bg-card/50 backdrop-blur-sm rounded-3xl overflow-hidden border border-border/50 shadow-2xl animate-fade-in">
+            <div 
+              className="relative h-full bg-card/50 backdrop-blur-sm rounded-3xl overflow-hidden border border-border/50 shadow-2xl animate-fade-in"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
               <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/20 to-accent/20">
                 <div className="text-center space-y-4 p-8">
                   <div className="text-8xl">{currentVideo.avatar}</div>
