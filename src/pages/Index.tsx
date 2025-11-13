@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import Icon from '@/components/ui/icon';
+import SplashScreen from '@/components/SplashScreen';
 
 interface Video {
   id: number;
@@ -50,6 +51,7 @@ const mockVideos: Video[] = [
 ];
 
 export default function Index() {
+  const [showSplash, setShowSplash] = useState(true);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [videos, setVideos] = useState(mockVideos);
   const [activeTab, setActiveTab] = useState<'home' | 'search' | 'upload' | 'trends' | 'profile'>('home');
@@ -104,6 +106,10 @@ export default function Index() {
       }
     }
   };
+
+  if (showSplash) {
+    return <SplashScreen onFinish={() => setShowSplash(false)} />;
+  }
 
   return (
     <div className="h-screen w-full bg-background overflow-hidden relative">
